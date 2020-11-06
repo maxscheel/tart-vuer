@@ -68,18 +68,14 @@ export default {
     methods: {
         redraw: function () {
             if (this.vis && this.antennas && this.gain) {
-                console.time('fullRefresh')
-                console.time('genImage')
 
                 let image = syn.gen_image(this.vis, this.antennas, this.gain, this.nw, this.num_bin)
-                console.timeEnd('genImage')
                 let virtual_canvas = document.createElement("canvas")
                 let virtual_ctx = virtual_canvas.getContext("2d")
                 virtual_canvas.width = this.num_bin
                 virtual_canvas.height = this.num_bin
                 let imgData = virtual_ctx.getImageData(0, 0, this.num_bin, this.num_bin);
                 let data = imgData.data;
-                console.time('loop')
 
                 for (let j = 0; j < image.shape[1]; j++) {
                     for (let i = 0; i < image.shape[0]; i++) {
@@ -91,13 +87,8 @@ export default {
                         data[s + 3] = 255;
                     }
                 }
-                console.timeEnd('loop')
-                console.time('setImage')
                 virtual_ctx.putImageData(imgData, 0, 0);
                 this.curl = virtual_canvas.toDataURL()
-                console.timeEnd('setImage')
-                console.timeEnd('fullRefresh')
-
             }
         },
     },
